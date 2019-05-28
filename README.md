@@ -30,9 +30,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 The following packages have been installed:
 - Angular Material with command `ng add @angular/material`,
+- Font-Awesome and Angular-Font-Awesome with command `npm install --save font-awesome angular-font-awesome`,
 - Bootstrap 4 with command `npm install --save bootstrap`,
+- Chart with command `npm install --save chart.js`,
 - Express with command `npm install --save express`,
 - Nodemon with command `npm install --save-dev nodemon`,
+- Nodemailer with command `npm install --save @types/nodemailer@4.6.5`,
 - Body-Parser with command `npm install --save body-parser`,
 - Mongoose with command `npm install --save mongoose`,
 - Multer with command `npm install --save multer`,

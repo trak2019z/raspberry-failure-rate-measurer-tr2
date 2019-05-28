@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  <span>
+    <a routerLink="/">RFRM</a>
+  </span>
+  <span class="spacer"></span>
+  <ul>
+    <li>
+      <a mat-button routerLink="/home/dashboard" routerLinkActive="mat-accent">Dashboard</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/home/administration" routerLinkActive="mat-accent">Administration Panel</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/home/user" routerLinkActive="mat-accent">Users Panel</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/home/measurement" routerLinkActive="mat-accent">Measurements Panel</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/home/report" routerLinkActive="mat-accent">Reports Panel</a>
+    </li>
+    <li>
+      <button mat-button (click)="onLogout();">Logout</button>
+    </li>
+  </ul>
+</mat-toolbar>

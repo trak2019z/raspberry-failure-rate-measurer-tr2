@@ -1,0 +1,81 @@
+<div class="login-view">
+    <div class="authentication-mask text-center" *ngIf="isAuthenticating">
+        <div class="spinner-container">
+            <mat-spinner></mat-spinner>
+        </div>
+    </div>
+    <div class="row h-100 m-0">
+        <div class="col p-0 left-column"></div>
+        <div class="col p-0 right-column align-items-center">
+            <div class="login-panel-container">
+                <mat-card>
+                    <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
+                        <div class="text-center" [hidden]="loginFailed || accountDisabled">
+                            <h4>RFRM</h4>
+                        </div>
+                        <div class="form-center-image" [hidden]="loginFailed || accountDisabled">
+                            <img src="../../../assets/login-logo.png" alt="logo image">
+                        </div>
+                        <div class="alert alert-danger text-left" style="font-size: 0.9rem !important;" 
+                             [hidden]="!loginFailed">
+                             <span [hidden]="accountDisabled">
+                                <b>Login failed!</b> An account with such login does not exist or incorrect login data is provided.
+                             </span>
+                             <span [hidden]="!accountDisabled">
+                                <b>Account disabled!</b> Contact the administrator or wait for the account to be activated.
+                             </span>
+                        </div>
+                        <div class="form-line"></div>
+                        <mat-form-field class="w-100 bp-10">
+                            <input matInput type="email" name="login"
+                                   placeholder="Login"
+                                   ngModel #loginInput="ngModel"
+                                   email
+                                   required
+                                   (ngModelChange)="isFormValid(loginForm)">
+                            <mat-error *ngIf="loginInput.invalid">Login doesn't exist or is invalid!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100">
+                            <input matInput type="password" name="password"
+                                   placeholder="Password"
+                                   ngModel #passwordInput="ngModel"
+                                   required
+                                   (ngModelChange)="isFormValid(loginForm)">
+                            <mat-error *ngIf="passwordInput.invalid">Password is invalid!</mat-error>
+                        </mat-form-field>
+                        <div class="text-center">
+                            <span class="signup-link">
+                                <a routerLink="/auth/signup">You don't have an account? Click here, to register!</a>
+                            </span>
+                        </div>
+                        <div class="text-center">
+                            <button mat-raised-button               
+                                    color="primary"
+                                    type="submit"
+                                    [disabled]="isButtonDisabled">
+                                Log In
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+            <footer class="text-center">
+                <div class="links-container">
+                    <span class="fa-size pr-25">
+                        <a href="https://www.facebook.com/filip.kuca91">
+                            <fa name="facebook"></fa> <!-- animation="spin" -->
+                        </a>
+                    </span>
+                    <span class="fa-size">
+                        <a href="https://pl.linkedin.com/in/filip-kuca-951aa395">
+                            <fa name="linkedin"></fa>
+                        </a>
+                    </span>
+                </div>
+                <div class="copyright-container">
+                    &copy;Copyright 2019. All rights reserved. Powered by Filip Kuca
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>

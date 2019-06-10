@@ -9,6 +9,7 @@ import { ReportComponent } from './report/report.component';
 import { UserComponent } from './user/user.component';
 import { AngularMaterialModule } from '../angular-material.module';
 import { HomeRoutingModule } from './home-routing.module';
+import { PageHeaderComponent } from '../components/page-header/page-header.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { HomeRoutingModule } from './home-routing.module';
     AdministrationComponent,
     MeasurementComponent,
     ReportComponent,
-    UserComponent
+    UserComponent,
+    PageHeaderComponent
   ],
   imports: [
     CommonModule,

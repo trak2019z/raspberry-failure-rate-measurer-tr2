@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatProgressSpinnerModule, MatCardModule, MatInputModule, MatButtonModule, MatToolbarModule } from '@angular/material';
+import { MatProgressSpinnerModule, MatCardModule, MatInputModule, MatButtonModule, MatToolbarModule, MatSelectModule } from '@angular/material';
 
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
@@ -10,6 +10,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
         MatInputModule,
         MatButtonModule,
         MatToolbarModule,
+        MatSelectModule,
         AngularFontAwesomeModule,
     ]
 })

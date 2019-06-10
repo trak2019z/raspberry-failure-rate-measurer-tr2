@@ -1,0 +1,17 @@
+mat-spinner {
+    margin: auto;
+}
+
+mat-card {
+    margin-right: 8%;
+    margin-bottom: 15px;
+}
+
+mat-form-field {
+    margin-right: 20px;
+}
+
+.pull-down-card {
+    position: absolute;
+    bottom: 15px;
+}

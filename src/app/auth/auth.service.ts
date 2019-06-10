@@ -28,16 +28,18 @@ export class AuthService {
         }, duration * 1000);
     }
 
-    private saveAuthData(token: string, expirationDate: Date, userId: string) {
+    private saveAuthData(token: string, expirationDate: Date, userId: string, isAdmin: number) {
         localStorage.setItem("token", token);
         localStorage.setItem("expiration", expirationDate.toISOString());
         localStorage.setItem("userId", userId);
+        localStorage.setItem("isAdmin", String(isAdmin));
       }
 
     private clearAuthData() {
         localStorage.removeItem("token");
         localStorage.removeItem("expiration");
         localStorage.removeItem("userId");
+        localStorage.removeItem("isAdmin");
       }
 
     createUser(login: string, password: string, repeatpassword: string) {
@@ -79,7 +81,7 @@ export class AuthService {
                 const now = new Date();
                 const expirationDate = new Date(now.getTime() + tokenLifespan * 1000);
                 console.log(expirationDate);
-                this.saveAuthData(token, expirationDate, this.userId); // this.isAdmin
+                this.saveAuthData(token, expirationDate, this.userId, this.isAdmin); // this.isAdmin
                 this.router.navigate(["/home"]);
             }
         }, error => {
@@ -120,6 +122,7 @@ export class AuthService {
             this.token = authInformation.token;
             this.isAuthenticated = true;
             this.userId = authInformation.userId;
+            this.isAdmin = authInformation.isAdmin;
             this.setAuthTimer(expiresIn / 1000);
             this.authStatusListener.next(true);
           }
@@ -129,14 +132,20 @@ export class AuthService {
         const token = localStorage.getItem("token");
         const expirationDate = localStorage.getItem("expiration");
         const userId = localStorage.getItem("userId");
+        const isAdmin = localStorage.getItem("isAdmin");
         if (!token || !expirationDate) {
           return;
         }
         return {
           token: token,
           expirationDate: new Date(expirationDate),
-          userId: userId
+          userId: userId,
+          isAdmin: Number(isAdmin)
         }
+    }
+
+    getIsAdmin() {
+        return this.isAdmin;
     }
 
 }

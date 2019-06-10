@@ -38,6 +38,7 @@ The following packages have been installed:
 - Nodemailer with command `npm install --save @types/nodemailer@4.6.5`,
 - Body-Parser with command `npm install --save body-parser`,
 - Mongoose with command `npm install --save mongoose`,
+- Mongoose Unique Validator with command `npm install --save mongoose-unique-validator`,
 - Multer with command `npm install --save multer`,
 - Bcrypt with command `npm install --save bcrypt`,
 - Jsonwebtoken with command `npm install --save jsonwebtoken`.

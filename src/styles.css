@@ -22,3 +22,23 @@ body {
 .mr-10 {
     margin-right: 10px !important;
 }
+
+/* Page Elements */
+.page-container {
+    min-height: 100%;
+}
+
+.page-content-container {
+    background: #303030;
+    padding: 20px 70px 40px 70px;
+    color: white;
+}
+
+.section-header h3 {
+    margin: 20px 0;
+    font-size: 20px;
+}
+
+.section-header{
+    
+}

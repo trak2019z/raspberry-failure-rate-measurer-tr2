@@ -1,0 +1,12 @@
+.page-header-container {
+    background: #9c27b0; 
+    padding-left: 20px;
+}
+
+.page-header-row h1 {
+    margin: 0; 
+    padding: 28px 8px; 
+    color: #fff; 
+    font-size: 20px; 
+    font-weight: 300;
+}

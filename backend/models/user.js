@@ -1,6 +1,6 @@
 //-- Requires --//
 const mongoose = require('mongoose');
-// const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator');
 
 //-- Schema --//
 const userSchema = mongoose.Schema({
@@ -9,6 +9,8 @@ const userSchema = mongoose.Schema({
     isAdmin: { type: Number },
     isActive: { type: Number }
 });
+
+userSchema.plugin(uniqueValidator);
 
 //-- Exports --//
 module.exports = mongoose.model("User", userSchema);

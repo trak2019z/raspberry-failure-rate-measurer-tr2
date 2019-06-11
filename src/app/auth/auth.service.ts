@@ -148,4 +148,8 @@ export class AuthService {
         return this.isAdmin;
     }
 
+    getUserId() {
+        return this.userId;
+    }
+
 }

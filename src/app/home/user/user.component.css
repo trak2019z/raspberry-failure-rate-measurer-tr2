@@ -9,3 +9,8 @@ mat-card {
 mat-form-field {
     margin-right: 20px;
 }
+
+.spinner-container {
+    display: flex;
+    height: 90%;
+}

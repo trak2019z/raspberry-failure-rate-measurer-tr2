@@ -1,11 +1,135 @@
 //--- Requires ---//
+const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
 const User = require("../models/user");
 const ServerRoom = require("../models/serverroom");
 const Relation = require("../models/relation");
+const Preferences = require("../models/preferences");
 
 //-- Methods --//
+//-- User --//
+exports.changePassword = (request, response, next) => {
+  let fetchedUser;
+  User.findOne({ _id: request.body.userId })
+  .then(user => {
+    fetchedUser = user;
+    return bcrypt.compare(request.body.oldPassword, user.password);
+  })
+  .then(result => {
+    if(!result) {
+      return response.status(401).json({
+        message: "Changing password failed"
+      });
+    }
+    bcrypt.hash(request.body.newPassword, 10)
+    .then(hash => {
+      User.updateOne({ _id: fetchedUser._id }, { password: hash })
+      .then(result => {
+        if(result.n > 0) {
+          response.status(200).json({
+            message: "Password changed"
+          })
+        }
+      })
+      .catch(error => {
+        response.status(500).json({
+          message: "Invalid authentication credentials"
+        })
+      })
+    })
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Invalid authentication credentials"
+    })
+  })
+}
+
+exports.getUserServerRooms = (request, response, next) => {
+  Relation.find({ accountId: request.params.id })
+  .then(supervisionedServerRooms => {
+    response.status(200).json({
+      message: "Server rooms collected correctly",
+      serverRooms: supervisionedServerRooms
+    });
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Collecting server rooms failed"
+    })
+  })
+}
+
+exports.updateServerRoomPreferences = (request, response, next) => {
+  Preferences.find({ serverRoomName: request.body.serverRoomName })
+  .then(preference => {
+    if(preference.length === 0) {
+      const preferences = new Preferences ({
+        serverRoomName: request.body.serverRoomName,
+        minimumTemperature: request.body.minimumTemperature,
+        maximumTemperature: request.body.maximumTemperature,
+        minimumHumidity: request.body.minimumHumidity,
+        maximumHumidity: request.body.maximumHumidity
+      })
+      preferences.save()
+      .then(result => {
+        response.status(201).json({
+          code: 201,
+          message: "Server room preferences updated"
+        });
+      })
+      .catch(error => {
+        response.status(500).json({
+          message: "Invalid authentication credentials"
+        })
+      })
+    } else {
+      Preferences.updateOne({ serverRoomName: request.body.serverRoomName}, 
+      { 
+        minimumTemperature: request.body.minimumTemperature, maximumTemperature: request.body.maximumTemperature, minimumHumidity: request.body.minimumHumidity, maximumHumidity: request.body.maximumHumidity 
+      })
+      .then(result => {
+        if(result.n > 0) {
+          response.status(200).json({
+            message: "Server room preferences updated"
+          })
+        } else {
+          response.status(500).json({
+            message: "Updating server room preferences failed"
+          })
+        }
+      })
+      .catch(error => {
+        response.status(500).json({
+          message: "Updating server room preferences failed"
+        })
+      })
+    }
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Updating server room preferences failed"
+    })
+  })
+}
+
+exports.getServerRoomPreferences = (request, response, next) => {
+  Preferences.find({ serverRoomName: request.params.name })
+  .then(result => {
+      response.status(200).json({
+        message: "Server room preferences collected correctly",
+        preferences: result
+    });
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Collecting server room preferences failed"
+    })
+  })
+}
+
+//-- Administration --//
 exports.getDisabledAccounts = (request, response, next) => {
     User.find({ isActive: 0 })
     .then(users => {
@@ -217,30 +341,43 @@ exports.deleteServerRoom = (request, response, next) => {
 }
 
 exports.createRelation = (request, response, next) => {
+  let serverRoomData;
   Relation.findOne({ accountId: request.body.accountId, serverRoomName: request.body.serverRoomName })
   .then(relation => {
     if(relation === null) {
-      const supervision = new Relation({
-        accountId: request.body.accountId,
-        serverRoomName: request.body.serverRoomName
-      });
-      supervision.save()
-      .then(result => {
-        response.status(201).json({
-          code: 201,
-          message: "Relation created successfully"
+      ServerRoom.findOne({ name: request.body.serverRoomName})
+      .then(serverRoom => {
+        serverRoomData = serverRoom;
+        const supervision = new Relation({
+          accountId: request.body.accountId,
+          serverRoomName: request.body.serverRoomName,
+          serverRoomAddress: serverRoomData.address,
+          serverRoomCity: serverRoomData.city
+        });
+        supervision.save()
+        .then(result => {
+          response.status(201).json({
+            code: 201,
+            message: "Relation created successfully" 
+          })
         })
-        .catch(err => {
+        .catch(error => {
           response.status(500).json({
             message: "Invalid authentication credentials"
           })
         })
       })
-    } else {
-      return response.status(500).json({
-        message: "Invalid authentication credentials"
+      .catch(error => {
+        response.status(500).json({
+          message: "Invalid authentication credentials"
+        })
       })
     }
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Invalid authentication credentials"
+    })
   })
 }
 
@@ -257,9 +394,9 @@ exports.deleteRelation = (request, response, next) => {
       })
     }
   })
-  .catch(error => {
-    response.status(500).json({
-      message: "Deleting supervision failed"
-    })
-  })
+  // .catch(error => {
+  //   response.status(500).json({
+  //     message: "Deleting supervision failed"
+  //   })
+  // })
 }

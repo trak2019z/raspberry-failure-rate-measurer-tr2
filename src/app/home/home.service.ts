@@ -6,6 +6,7 @@ import { Subject } from "rxjs";
 
 import { HomeAccountData } from "./home-account.data.model";
 import { HomeServerroomData } from "./home-serverroom.data";
+import { HomeSupervisionData } from "./home-supervision.data.model";
 
 const url = "http://localhost:3000/api/home/";
 
@@ -15,11 +16,15 @@ export class HomeService {
     private activeAccounts: HomeAccountData[] = [];
     private disabledAccountsList = new Subject<{accounts: HomeAccountData[]}>();
     private activeAccountsList = new Subject<{accounts: HomeAccountData[]}>();
-
     private createResult = new Subject<{code: number}>();
     private createServerRoomStatusListener = new Subject<boolean>();
     private serverrooms: HomeServerroomData[] = [];
     private serverRoomsList = new Subject<{serverrooms: HomeServerroomData[]}>();
+    private changePasswordListener = new Subject<boolean>();
+    private supervisionedServerRooms: HomeSupervisionData[] = [];
+    private supervisionedServerRoomsList = new Subject<{serverRooms: HomeSupervisionData[]}>();
+    private serverRoomPreferences = {};
+    private currentServerRoomPreferences = new Subject<{}>();
 
     constructor(private http: HttpClient) {}
 
@@ -207,7 +212,99 @@ export class HomeService {
     deleteRelationBetweenUserAndServerRoom(account: string, serverRoom: string) {
         this.http.delete(url + "administration/relations/delete/" + account + "/" + serverRoom)
         .subscribe((result: any) => {
-            console.log(result);
+            this.createResult.next({
+                code: result.code
+            })
+        }, error => {
+            this.createResult.next({
+                code: error.error.code
+            });
+            this.changePasswordListener.next(false);
         })
+    }
+
+    changePassword(userId: string, oldPassword: string, newPassword: string, repeatedPassword: string) {
+        const obj = { userId: userId, oldPassword: oldPassword, newPassword: newPassword, repeatedPassword: repeatedPassword};
+        this.http.put(url + "user/account", obj)
+        .subscribe((result: any) => {
+            this.createResult.next({
+                code: result.code
+            })
+        }, error => {
+            this.createResult.next({
+                code: error.error.code
+            });
+        })
+    }
+
+    getServerRoomsUnderUserCare(userId: string) {
+        this.http.get<{message: string, serverRooms: any}>(url + "user/relations/" + userId)
+        .pipe(map((data) => {
+            return { serverRooms: data.serverRooms.map(supervision => {
+                return {
+                    id: supervision._id,
+                    userId: supervision.userId,
+                    serverRoomName: supervision.serverRoomName,
+                    serverRoomAddress: supervision.serverRoomAddress,
+                    serverRoomCity: supervision.serverRoomCity
+                };
+            })};
+        }))
+        .subscribe((transformedServerRooms) => {
+            this.supervisionedServerRooms = transformedServerRooms.serverRooms;
+            this.supervisionedServerRoomsList.next(
+                {
+                    serverRooms: [...this.supervisionedServerRooms]
+                });
+        });
+    }
+
+    getSupervisionedRoomsListener() {
+        return this.supervisionedServerRoomsList.asObservable();
+    }
+
+    renounceSupervision(account: string, serverRoomName: string) { 
+        this.http.delete(url + "administration/relations/delete/" + account + "/" + serverRoomName)
+        .subscribe((result: any) => {
+            this.createResult.next({
+                code: result.code
+            })
+            const updatedSupervisionList = this.supervisionedServerRooms.filter(serverRoom => serverRoom.serverRoomName !== serverRoomName);
+            this.supervisionedServerRooms = updatedSupervisionList;
+            this.supervisionedServerRoomsList.next(
+                {
+                    serverRooms: [...this.supervisionedServerRooms]
+                })
+            }, error => {
+            this.createResult.next({
+                code: error.error.code
+            });
+        })
+    }
+
+    updateServerRoomPreferences(serverRoom: string, minTmp: number, maxTmp: number, minHum: number, maxHum: number) {
+        const obj = { serverRoomName: serverRoom, minimumTemperature: minTmp, maximumTemperature: maxTmp, minimumHumidity: minHum, maximumHumidity: maxHum };
+        this.http.put(url + "user/serverroom/preferences/update", obj)
+        .subscribe((result: any) => {
+            this.createResult.next({
+                code: result.code
+            })
+        }, error => {
+            this.createResult.next({
+                code: error.error.code
+            });
+        })
+    }
+
+    getServerRoomPreferences(serverRoom: string) {
+        this.http.get<{message: string, preferences: any }>(url + "/user/serverroom/preferences/" + serverRoom)
+        .subscribe(result => {
+            this.serverRoomPreferences = result.preferences[0];
+            this.currentServerRoomPreferences.next(this.serverRoomPreferences);
+        })
+    }
+
+    getServerRoomPreferencesListener() {
+        return this.currentServerRoomPreferences.asObservable();
     }
 }

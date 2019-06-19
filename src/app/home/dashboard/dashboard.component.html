@@ -1,3 +1,99 @@
 <div class="page-container">
     <app-page-header name="Dashboard"></app-page-header>
+    <div class="page-content-container">
+        <div class="content">
+            <section>
+                <mat-spinner *ngIf="isLoading"></mat-spinner>
+                <div class="section-header" *ngIf="!serverRoomListVisible">
+                    <h3>{{ serverRoomName }} 
+                        <i class="fa fa-info" 
+                        matTooltip="Server room for which the summary is displayed. Click on me, to change it."
+                        aria-label="Image displaying information"
+                        [matTooltipPosition]="'after'"
+                        (click)="onSummaryTooltipImageclick()">
+                        </i>
+                    </h3>
+                </div>
+                <div class="section-header" style="margin-bottom: 32px;" 
+                     *ngIf="serverRoomListVisible && isAdmin === 1">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Change server room</mat-card-title>
+                            <mat-card-subtitle>Change abbreviation for which server room to show</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-form-field>
+                                <mat-label>Server rooms</mat-label>
+                                    <mat-select [(ngModel)]="serverRoomAbbreviationToDisplay" 
+                                                [disabled]="serverRooms.length <= 1">
+                                        <mat-option *ngFor="let serverRoom of serverRooms"
+                                                    [value]="serverRoom.name">
+                                            {{ serverRoom.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                <mat-error></mat-error>
+                            </mat-form-field>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button (click)="onChangingServerRoomAbbreviationToDisplay();"
+                                    [disabled]="serverRoomAbbreviationToDisplay === ''">
+                                Show abbreviation
+                            </button>
+                            <button color="warn" mat-button (click)="serverRoomListVisible = !serverRoomListVisible">
+                                Cancel
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+                <div class="section-header" style="margin-bottom: 32px;" 
+                     *ngIf="serverRoomListVisible && isAdmin === 0">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Change server room</mat-card-title>
+                            <mat-card-subtitle>Change abbreviation for which server room to show</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-form-field>
+                                <mat-label>Server rooms</mat-label>
+                                    <mat-select [(ngModel)]="serverRoomAbbreviationToDisplay" 
+                                                [disabled]="supervisionedServerRooms.length <= 1">
+                                        <mat-option *ngFor="let serverRoom of supervisionedServerRooms"
+                                                    [value]="serverRoom.serverRoomName">
+                                            {{ serverRoom.serverRoomName }}
+                                        </mat-option>
+                                    </mat-select>
+                                <mat-error></mat-error>
+                            </mat-form-field>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button (click)="onChangingServerRoomAbbreviationToDisplay();"
+                                    [disabled]="serverRoomAbbreviationToDisplay === ''">
+                                Show abbreviation
+                            </button>
+                            <button color="warn" mat-button (click)="serverRoomListVisible = !serverRoomListVisible">
+                                Cancel
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <div class="col-12">
+                            <app-dashboard-cards [today]="today" 
+                                                 [avgTemperature]="avgTemperature" 
+                                                 [maxTemperature]="maxTemperature" 
+                                                 [avgHumidity]="avgHumidity" 
+                                                 [maxHumidity]="maxHumidity" 
+                                                 [warnings]="warnings"
+                                                 [preferences]="currentPreferences">
+                            </app-dashboard-cards>
+                            <hr class="white-bg">
+                        </div>
+                    </div>
+                    <app-dashboard-charts [preferences]="currentPreferences" [abbreviation]="abbreviation">
+                    </app-dashboard-charts>
+                </div>
+            </section>
+        </div>
+    </div>
 </div>

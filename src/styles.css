@@ -39,6 +39,14 @@ body {
     font-size: 20px;
 }
 
-.section-header{
-    
+.section-header i {
+    cursor: pointer;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    justify-content: center
 }

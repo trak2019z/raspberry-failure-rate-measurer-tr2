@@ -18,17 +18,17 @@ export class UserComponent implements OnInit, OnDestroy {
     userId: string;
     isButtonDisabled = true;
     isChangingPassword = false;
-    private supervisionedServerRoomsListener: Subscription;
     supervisionedServerRooms: HomeSupervisionData[] = [];
-    private serverRoomsListener: Subscription;
     serverRooms: HomeServerroomData[] = [];
     selectedServerRoom: string;
     minTemperature: number;
     maxTemperature: number;
     minHumidity: number;
     maxHumidity: number;
-    private preferencesListener: Subscription;
     currentPreferences: any;
+    private supervisionedServerRoomsListener: Subscription;
+    private serverRoomsListener: Subscription;
+    private preferencesListener: Subscription;
 
     constructor(public homeService: HomeService, private authService: AuthService) {}
 
@@ -94,5 +94,6 @@ export class UserComponent implements OnInit, OnDestroy {
         if(this.serverRooms.length > 0) {
             this.serverRoomsListener.unsubscribe();
         }
+        this.preferencesListener.unsubscribe();
     }
 }

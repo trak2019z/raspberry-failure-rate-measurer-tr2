@@ -1,0 +1,51 @@
+.dashboard-card {
+    width: 320px;
+    padding: 10px;
+}
+
+.dashboard-card-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.dashboard-card-container .dashboard-card-image {
+    max-width: 50px;
+}
+
+.dashboard-main-desc {
+    width: 100%;
+    padding-right: 10px;
+}
+
+.dashboard-main-desc span{
+    display: block;
+    width: 100%;
+    text-align: right;
+    font-size: 14px;
+}
+
+.dashboard-card-footer {
+    font-size: 14px;
+}
+
+.dashboard-card-footer i {
+    padding: 0 10px;
+}
+
+.temperature-bg {
+    background: #F44336;
+}
+
+.humidity-bg {
+    background: #4CAF50;
+}
+
+.warning-bg {
+    background: #03A9F4;
+}
+
+.spacer {
+    min-width: 10px;
+    flex: 1 1 auto;
+}

@@ -25,6 +25,9 @@ export class HomeService {
     private supervisionedServerRoomsList = new Subject<{serverRooms: HomeSupervisionData[]}>();
     private serverRoomPreferences = {};
     private currentServerRoomPreferences = new Subject<{}>();
+    
+    private measurementsAbbreviation: any;
+    private measurementsAbbreviationList = new Subject<{measurements: any}>();
 
     constructor(private http: HttpClient) {}
 
@@ -306,5 +309,17 @@ export class HomeService {
 
     getServerRoomPreferencesListener() {
         return this.currentServerRoomPreferences.asObservable();
+    }
+
+    getDashboardAbbreviation(name: string) {
+        this.http.get<{message: string, measurements: any}>(url + "/dashboard/measurements/abbreviation" + name)
+        .subscribe(result => {
+            this.measurementsAbbreviation = result.measurements;
+            this.measurementsAbbreviationList.next(this.measurementsAbbreviation);
+        })
+    }
+
+    getAbbreviationListener() {
+        return this.measurementsAbbreviationList.asObservable();
     }
 }

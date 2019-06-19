@@ -1,4 +1,4 @@
-console.log("Welcome! RFRM-Server v.0.2.2 is loading ...");
+console.log("Welcome! RFRM-Server v.0.3.0 is loading ...");
 
 //--- Requires ---//
 const app = require("./backend/app");

@@ -1,0 +1,63 @@
+<div class="flex flex-center">
+    <div class="dashboard-card temperature-bg">
+        <div class="dashboard-card-container">
+            <div class="dashboard-card-image">
+                <i class="fa fa-4x fa-thermometer-empty"></i>
+            </div>
+            <div class="dashboard-main-desc">
+                <span>
+                    <b>Average temperature:</b> {{ avgTemperature }} &#8451;
+                </span>
+                <span>
+                    <b>Max temperature:</b> {{ maxTemperature }} &#8451;
+                </span>
+            </div>
+        </div>
+        <div class="dashboard-card-footer">
+            <span>
+                Last measurement date: <i class="fa fa-calendar"></i> {{ today }}
+            </span>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="dashboard-card humidity-bg">
+        <div class="dashboard-card-container">
+            <div class="dashboard-card-image">
+                <i class="fa fa-4x fa-tint"></i>
+            </div>
+            <div class="dashboard-main-desc">
+                <span>
+                    <b>Average humidity:</b> {{ avgHumidity }} %RH
+                </span>
+                <span>
+                    <b>Max humidity:</b> {{ maxHumidity }} %RH
+                </span>
+            </div>
+        </div>
+        <div class="dashboard-card-footer">
+            <span>
+                Last measurement date: <i class="fa fa-calendar"></i> {{ today }}
+            </span> 
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="dashboard-card warning-bg">
+        <div class="dashboard-card-container">
+            <div class="dashboard-card-image">
+                <i class="fa fa-4x fa-exclamation"></i>
+            </div>
+            <div class="dashboard-main-desc">
+                <span>
+                    <b>Warnings number:</b> {{ warnings }}<br>
+                    <b>Temperature range:</b> {{ minPrevailedTemperature }} &#8451; - {{ maxPrevailedTemperature }} &#8451;<br>
+                    <b>Humidity range:</b> {{ minPrevailedHumidity }} %RH - {{ maxPrevailedHumidity }} %RH
+                </span>
+            </div>
+        </div>
+        <div class="dashboard-card-footer">
+            <span>
+                Last measurement date: <i class="fa fa-calendar"></i> {{ today }}
+            </span>
+        </div>
+    </div>
+</div>

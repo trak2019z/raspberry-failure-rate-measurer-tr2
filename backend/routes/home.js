@@ -5,6 +5,8 @@ const HomeController = require("../controllers/home");
 const router = express.Router();
 
 //--- Methods ---/
+router.get("/dashboard/measurements/abbreviation:name", HomeController.getMeasurementAbbreviation);
+
 router.get("/administration/accounts/disabled", HomeController.getDisabledAccounts);
 router.get("/administration/accounts/active", HomeController.getActivatedAccounts);
 router.put("/administration/accounts/activate", HomeController.activateAccount);

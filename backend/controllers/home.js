@@ -6,8 +6,32 @@ const User = require("../models/user");
 const ServerRoom = require("../models/serverroom");
 const Relation = require("../models/relation");
 const Preferences = require("../models/preferences");
+const Measurement = require("../models/measurement");
 
 //-- Methods --//
+//-- Measurement --//
+exports.getMeasurementAbbreviation = (request, response, next) => {
+  let today = new Date();
+  today.setHours(0,0,0,0);
+  let almostTomorrow = new Date();
+  almostTomorrow.setHours(23,59,0,0);
+  // console.log(today)
+  // console.log(almostTomorrow);
+  Measurement.find({ serverRoom: request.params.name, 
+                     realDate: {"$gte": today, "$lt": almostTomorrow}})
+  .then(measurements => {
+    response.status(200).json({
+      message: "Measurements collected correctly",
+      measurements: measurements
+    });
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Collecting measurements failed"
+    })
+  })
+}
+
 //-- User --//
 exports.changePassword = (request, response, next) => {
   let fetchedUser;
@@ -87,7 +111,10 @@ exports.updateServerRoomPreferences = (request, response, next) => {
     } else {
       Preferences.updateOne({ serverRoomName: request.body.serverRoomName}, 
       { 
-        minimumTemperature: request.body.minimumTemperature, maximumTemperature: request.body.maximumTemperature, minimumHumidity: request.body.minimumHumidity, maximumHumidity: request.body.maximumHumidity 
+        minimumTemperature: request.body.minimumTemperature, 
+        maximumTemperature: request.body.maximumTemperature, 
+        minimumHumidity: request.body.minimumHumidity, 
+        maximumHumidity: request.body.maximumHumidity 
       })
       .then(result => {
         if(result.n > 0) {

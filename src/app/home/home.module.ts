@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardCardsComponent } from '../components/dashboard-cards/dashboard-cards.component';
+import { DashboardChartsComponent } from '../components/dashboard-charts/dashboard-charts.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { MeasurementComponent } from './measurement/measurement.component';
 import { ReportComponent } from './report/report.component';
@@ -14,6 +16,8 @@ import { PageHeaderComponent } from '../components/page-header/page-header.compo
 @NgModule({
   declarations: [
     DashboardComponent,
+    DashboardCardsComponent,
+    DashboardChartsComponent,
     AdministrationComponent,
     MeasurementComponent,
     ReportComponent,

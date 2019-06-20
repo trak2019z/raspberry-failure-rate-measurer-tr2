@@ -1,0 +1,214 @@
+<div class="page-container">
+    <app-page-header name="User"></app-page-header>
+    <div class="page-content-container">
+        <div class="content">
+            <section>
+                <mat-spinner *ngIf="isLoading"></mat-spinner>
+                <div class="section-header">
+                    <h3>User panel</h3>
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <div class="col-5">
+                            <mat-card>
+                                <form (submit)="onChangePassword(passwordForm)" #passwordForm="ngForm">
+                                    <mat-card-header>
+                                        <mat-card-title>Change password</mat-card-title>
+                                        <mat-card-subtitle>Change old password to a new one</mat-card-subtitle>  
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <mat-form-field>
+                                            <input matInput type="password" name="oldPassword"
+                                                   placeholder="Old password"
+                                                   ngModel #oldPasswordInput="ngModel"
+                                                   required (ngModelChange)="isFormValid(passwordForm)">
+                                        </mat-form-field>
+                                        <br>
+                                        <mat-form-field>
+                                            <input matInput type="password" name="newPassword"
+                                                   placeholder="New password"
+                                                   ngModel #newPasswordInput="ngModel"
+                                                   required minlength="6" maxlength="12"
+                                                   (ngModelChange)="isFormValid(passwordForm)">
+                                            <mat-error *ngIf="newPasswordInput.invalid">
+                                                Password invalid!
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field>
+                                            <input matInput type="password" name="repeatNewPassword"
+                                                placeholder="Repeat new password"
+                                                ngModel #repeatNewPasswordInput="ngModel"
+                                                required minlength="6" maxlength="12"
+                                                (ngModelChange)="isFormValid(passwordForm)"
+                                                appConfirmEqualValidator="newPassword">
+                                            <mat-error *ngIf="repeatNewPasswordInput.invalid && !repeatNewPasswordInput.errors?.notEqual">
+                                                Password invalid!
+                                            </mat-error>
+                                            <mat-error *ngIf="repeatNewPasswordInput.invalid && repeatNewPasswordInput.errors?.notEqual">
+                                                Passwords are different!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </mat-card-content>
+                                    <mat-card-actions>
+                                        <button mat-button type="submit"
+                                                [disabled]="isButtonDisabled">Change password</button>
+                                    </mat-card-actions>
+                                </form>
+                            </mat-card>
+                        </div>
+                        <div class="col-7" *ngIf="supervisionedServerRooms.length > 0 && isAdmin === 0">
+                            <mat-card *ngFor="let serverRoom of supervisionedServerRooms">
+                                <mat-card-header>
+                                    <mat-card-title>{{ serverRoom.serverRoomName }}</mat-card-title>
+                                    <mat-card-subtitle>Server room to which you have access</mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p>
+                                        <b>Address:</b> {{ serverRoom.serverRoomAddress }}
+                                    </p>
+                                    <p>
+                                        <b>City:</b> {{ serverRoom.serverRoomCity }}
+                                    </p>
+                                </mat-card-content>
+                                <mat-card-actions>
+                                    <button color="warn" mat-button 
+                                            (click)="onRenouncingSupervision(serverRoom.serverRoomName);">
+                                        Renounce supervision
+                                    </button>
+                                </mat-card-actions>
+                            </mat-card>
+                        </div>
+                        <div class="col-7 text-center" *ngIf="supervisionedServerRooms.length === 0 &&serverRooms.length === 0">
+                            <p>No server room has been put under your care.</p>
+                            <div class="spinner-container">
+                                <mat-spinner></mat-spinner>
+                            </div>
+                        </div>
+                        <div class="col-7" *ngIf="serverRooms.length > 0 && isAdmin === 1">
+                            <mat-card *ngFor="let serverRoom of serverRooms">
+                                <mat-card-header>
+                                    <mat-card-title>{{ serverRoom.name }}</mat-card-title>
+                                    <mat-card-subtitle>Server room to which you have access</mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <p>
+                                        <b>Address:</b> {{ serverRoom.address }}
+                                    </p>
+                                    <p>
+                                        <b>City:</b> {{ serverRoom.city }}
+                                    </p>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="col-5">
+                            <mat-card>
+                                <mat-card-header>
+                                    <mat-card-title>Server room preferences</mat-card-title>
+                                    <mat-card-subtitle>Change server room preferences</mat-card-subtitle>
+                                </mat-card-header>
+                                <mat-card-content *ngIf="isAdmin === 0">
+                                    <mat-form-field>
+                                        <mat-label>Server room</mat-label>
+                                        <mat-select [(ngModel)]="selectedServerRoom"
+                                                    [disabled]="supervisionedServerRooms.length === 0"
+                                                    (ngModelChange)="getServerRoomPreferences(selectedServerRoom)"
+                                                    required>
+                                            <mat-option *ngFor="let serverRoom of supervisionedServerRooms"
+                                                        [value]="serverRoom.serverRoomName">
+                                                {{ serverRoom.serverRoomName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <br>
+                                    <mat-form-field>
+                                        <mat-label>Minimum temperature</mat-label>
+                                        <input matInput type="number" name="minTemperature"
+                                               step="0.1" placeholder="Temperature"
+                                               [(ngModel)]="minTemperature"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Maximum temperature</mat-label>
+                                        <input matInput type="number" name="maxTemperature"
+                                               step="0.1" placeholder="Temperature"
+                                               [(ngModel)]="maxTemperature"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Minimum humidity</mat-label>
+                                        <input matInput type="number" name="minHumidity"
+                                               step="0.1" placeholder="Humidity"
+                                               [(ngModel)]="minHumidity"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Maximum humidity</mat-label>
+                                        <input matInput type="number" name="maxHumidity"
+                                               step="0.1" placeholder="Humidity"
+                                               [(ngModel)]="maxHumidity"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-card-actions>
+                                        <button mat-button (click)="onServerRoomPreferencesUpdate();"
+                                                [disabled]="!selectedServerRoom">
+                                            Update preferences
+                                        </button>
+                                    </mat-card-actions>
+                                </mat-card-content>
+                                <mat-card-content *ngIf="isAdmin === 1">
+                                    <mat-form-field>
+                                        <mat-label>Server room</mat-label>
+                                        <mat-select [(ngModel)]="selectedServerRoom"
+                                                    [disabled]="serverRooms.length === 0"
+                                                    (ngModelChange)="getServerRoomPreferences(selectedServerRoom)"
+                                                    required>
+                                            <mat-option *ngFor="let serverRoom of serverRooms"
+                                                        [value]="serverRoom.name">
+                                                {{ serverRoom.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <br>
+                                    <mat-form-field>
+                                        <mat-label>Minimum temperature</mat-label>
+                                        <input matInput type="number" name="minTemperature"
+                                               step="0.1" placeholder="Temperature"
+                                               [(ngModel)]="minTemperature"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Maximum temperature</mat-label>
+                                        <input matInput type="number" name="maxTemperature"
+                                               step="0.1" placeholder="Temperature"
+                                               [(ngModel)]="maxTemperature"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Minimum humidity</mat-label>
+                                        <input matInput type="number" name="minHumidity"
+                                               step="0.1" placeholder="Humidity"
+                                               [(ngModel)]="minHumidity"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-label>Maximum humidity</mat-label>
+                                        <input matInput type="number" name="maxHumidity"
+                                               step="0.1" placeholder="Humidity"
+                                               [(ngModel)]="maxHumidity"
+                                               required>
+                                    </mat-form-field>
+                                    <mat-card-actions>
+                                        <button mat-button (click)="onServerRoomPreferencesUpdate();"
+                                                [disabled]="!selectedServerRoom">
+                                            Update preferences
+                                        </button>
+                                    </mat-card-actions>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

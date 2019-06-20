@@ -1,0 +1,16 @@
+mat-spinner {
+    margin: auto;
+}
+
+mat-card {
+    margin-bottom: 15px;
+}
+
+mat-form-field {
+    margin-right: 20px;
+}
+
+.spinner-container {
+    display: flex;
+    height: 90%;
+}

@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+  <nav class="navbar-container">
+    <a routerLink="/" mat-button>
+      <span class="wrapper logo-button">
+        <img class="" src="../../../assets/login-logo-navbar.png" alt="Raspberry Failure Rate Measurer">
+        <span>RFRM</span>
+      </span>
+    </a>
+    <span class="spacer"></span>
+    <a routerLink="/home/dashboard" routerLinkActive="mat-accent" mat-button>
+      <span>Dashboard</span>
+    </a>
+    <a routerLink="/home/administration" routerLinkActive="mat-accent" [hidden]="isAdmin === 0" mat-button>
+      <span>Administration</span>
+    </a>
+    <a routerLink="/home/user" routerLinkActive="mat-accent" mat-button>
+      <span>Users</span>
+    </a>
+    <a routerLink="/home/measurement" routerLinkActive="mat-accent" mat-button>
+      <span>Measurements</span>
+    </a>
+    <a routerLink="/home/report" routerLinkActive="mat-accent" mat-button>
+      <span>Reports</span>
+    </a>
+    <a (click)="onLogout();" mat-button>
+      <span>Logout</span>
+    </a>
+  </nav>
+</mat-toolbar>

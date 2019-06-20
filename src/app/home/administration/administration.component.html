@@ -1,0 +1,193 @@
+<div class="page-container">
+    <app-page-header name="Administration"></app-page-header>
+    <div class="page-content-container">
+        <div class="content">
+            <section>
+                <mat-spinner *ngIf="isLoading"></mat-spinner>
+                <div class="section-header">
+                    <h3>Account management</h3>
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <mat-card class="col-5">
+                            <mat-card-header>
+                                <mat-card-title>Account status</mat-card-title>
+                                <mat-card-subtitle>Activate or disable user account</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <mat-form-field>
+                                    <mat-label>Disabled accounts</mat-label>
+                                        <mat-select [(ngModel)]="disabledAccount" 
+                                                    [disabled]="disabledAccounts.length === 0">
+                                            <mat-option *ngFor="let account of disabledAccounts"
+                                                        [value]="account.id">
+                                                {{ account.login }}
+                                            </mat-option>
+                                        </mat-select>
+                                    <mat-error></mat-error>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Activated accounts</mat-label>
+                                        <mat-select [(ngModel)]="activatedAccount"
+                                                    [disabled]="activeAccounts.length === 0">
+                                            <mat-option *ngFor="let account of activeAccounts"
+                                                        [value]="account.id">
+                                                {{ account.login }}
+                                            </mat-option>
+                                        </mat-select>
+                                    <mat-error></mat-error>
+                                </mat-form-field>
+                            </mat-card-content>
+                            <mat-card-actions>
+                                <button mat-button (click)="onAccountActivating();"
+                                        [disabled]="disabledAccounts.length === 0">
+                                    Activate
+                                </button>
+                                <button color="warn" mat-button (click)="onAccountDisabling();"
+                                        [disabled]="activeAccounts.length === 0">
+                                    Disable
+                                </button>
+                            </mat-card-actions>
+                        </mat-card>
+                        <mat-card class="col-5">
+                            <mat-card-header>
+                                <mat-card-title>Administrator privileges</mat-card-title>
+                                <mat-card-subtitle>Give account administrator privileges</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <mat-form-field>
+                                    <mat-label>Account</mat-label>
+                                        <mat-select [(ngModel)]="userAccount"
+                                                    [disabled]="activeAccounts.length === 0">
+                                            <mat-option *ngFor="let account of activeAccounts"
+                                                        [value]="account.id">
+                                                {{ account.login }}
+                                            </mat-option>
+                                        </mat-select>
+                                    <mat-error></mat-error>
+                                </mat-form-field>
+                            </mat-card-content>
+                            <mat-card-actions class="pull-down-card">
+                                <button mat-button (click)="onPrivilegesGranting();">Give permissions</button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="section-header">
+                    <h3>Server room management</h3>
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <mat-card class="col-5">
+                            <mat-card-header>
+                                <mat-card-title>Add new server room</mat-card-title>
+                                <mat-card-subtitle>Add server room to database</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <form (submit)="onAddingServerRoom(createServerroomForm)"              #createServerroomForm="ngForm">
+                                    <mat-form-field>
+                                        <input matInput type="text" name="serverName"
+                                               placeholder="Server room name"
+                                               ngModel #serverNameInput="ngModel"
+                                               (ngModelChange)="isFormValid(createServerroomForm)" required>
+                                        <mat-error *ngIf="serverNameInput.invalid">
+                                            Server name is required!
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput type="text" name="serverAddress"
+                                               placeholder="Server room street address"
+                                               ngModel #serverAddressInput="ngModel"
+                                               (ngModelChange)="isFormValid(createServerroomForm)" required>
+                                        <mat-error *ngIf="serverAddressInput.invalid">
+                                            Server address is required!
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput type="text" name="serverCity"
+                                               placeholder="Server room city"
+                                               ngModel #serverCityInput="ngModel"
+                                               (ngModelChange)="isFormValid(createServerroomForm)" required>
+                                        <mat-error *ngIf="serverCityInput.invalid">
+                                            Server city is required!
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-card-actions>
+                                        <button mat-button 
+                                                type="submit"
+                                                [disabled]="isButtonDisabled">
+                                            Add
+                                        </button>
+                                    </mat-card-actions>
+                                </form>
+                            </mat-card-content>
+                        </mat-card>
+                        <mat-card class="col-5">
+                            <mat-card-header>
+                                <mat-card-title>Delete server room</mat-card-title>
+                                <mat-card-subtitle>Delete server room from database</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <mat-form-field>
+                                    <mat-label>Server room</mat-label>
+                                        <mat-select [(ngModel)]="serverRoom"
+                                                    [disabled]="serverRooms.length === 0">
+                                            <mat-option *ngFor="let serverRoom of serverRooms"
+                                                        [value]="serverRoom.name">
+                                                {{ serverRoom.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    <mat-error></mat-error>
+                                </mat-form-field>
+                            </mat-card-content>
+                            <mat-card-actions class="pull-down-card">
+                                <button color="warn" mat-button (click)="onDeletingServerRoom();">Delete</button>
+                            </mat-card-actions>
+                        </mat-card>
+                        <mat-card class="col-5">
+                            <mat-card-header>
+                                <mat-card-title>Permission to server room</mat-card-title>
+                                <mat-card-subtitle>Give or take permission to server room data</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <mat-form-field>
+                                    <mat-label>Account</mat-label>
+                                        <mat-select [(ngModel)]="accountToBound"
+                                                    [disabled]="activeAccounts.length === 0">
+                                            <mat-option *ngFor="let account of activeAccounts"
+                                                        [value]="account.id">
+                                                {{ account.login }}
+                                            </mat-option>
+                                        </mat-select>
+                                    <mat-error></mat-error>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Server room</mat-label>
+                                        <mat-select [(ngModel)]="serverRoomToBound"
+                                                    [disabled]="serverRooms.length === 0">
+                                            <mat-option *ngFor="let serverRoom of serverRooms"
+                                                        [value]="serverRoom.name">
+                                                {{ serverRoom.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    <mat-error></mat-error>
+                                </mat-form-field>
+                            </mat-card-content>
+                            <mat-card-actions>
+                                <button mat-button (click)="onBoundingUserToServerRoom();"
+                                        [disabled]="!serverRoomToBound || !accountToBound">Give access</button>
+                                <button color="warn" mat-button 
+                                        (click)="onDeletingBoundBetweenUserAndServerRoom();"
+                                        [disabled]="!serverRoomToBound || !accountToBound">
+                                    Take away access
+                                </button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

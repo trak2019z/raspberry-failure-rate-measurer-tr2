@@ -1,0 +1,98 @@
+<div class="login-view">
+    <div class="authentication-mask text-center" *ngIf="isRegistering">
+        <div class="spinner-container">
+            <mat-spinner></mat-spinner>
+        </div>
+    </div>
+    <div class="row h-100 m-0">
+        <div class="col p-0 left-column"></div>
+        <div class="col p-0 right-column align-items-center">
+            <div class="login-panel-container">
+                <mat-card>
+                    <form (submit)="onSignup(signupForm)" #signupForm="ngForm">
+                        <div class="text-center" [hidden]="registeringSuccessfull || registeringFailed">
+                            <h4>RFRM</h4>
+                        </div>
+                        <div class="form-center-image" [hidden]="registeringSuccessfull || registeringFailed">
+                            <img src="../../../assets/login-logo.png" alt="logo image">
+                        </div>
+                        <div class="alert alert-danger text-left" style="font-size: 0.9rem !important;" 
+                             [hidden]="!registeringFailed">
+                             <b>Account creation failed!</b> The login is already taken or the server is down.
+                        </div>
+                        <div class="alert alert-success text-left" style="font-size: 0.9rem !important;" 
+                             [hidden]="!registeringSuccessfull">
+                             <b>Creating an account has been successfully completed!</b> Please wait. You will be notified by e-mail when the account is activated.
+                        </div>
+                        <div class="form-line"></div>
+                        <mat-form-field class="w-100 bp-10">
+                            <input matInput type="email" name="login"
+                                   placeholder="Login (E-mail)"
+                                   ngModel #loginInput="ngModel"
+                                   email
+                                   required
+                                   (ngModelChange)="isFormValid(signupForm)">
+                            <mat-error *ngIf="loginInput.invalid">
+                                Login exist or is invalid!
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100 bp-10">
+                            <input matInput type="password" name="password"
+                                   placeholder="Password"
+                                   ngModel #passwordInput="ngModel"
+                                   required minlength="6" maxlength="12"
+                                   (ngModelChange)="isFormValid(signupForm)">
+                            <mat-error *ngIf="passwordInput.invalid">
+                                Password invalid!
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-100 bp-10">
+                            <input matInput type="password" name="repeatpassword"
+                                   placeholder="Repeat password"
+                                   ngModel #repeatPasswordInput="ngModel"
+                                   required minlength="6" maxlength="12"
+                                   (ngModelChange)="isFormValid(signupForm)"
+                                   appConfirmEqualValidator="password">
+                            <mat-error *ngIf="repeatPasswordInput.invalid && !repeatPasswordInput.errors?.notEqual">
+                                Password invalid!
+                            </mat-error>
+                            <mat-error *ngIf="repeatPasswordInput.invalid && repeatPasswordInput.errors?.notEqual">
+                                Passwords are different!
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="text-center">
+                            <button class="mr-10" mat-raised-button               
+                                    color="primary"
+                                    type="submit"
+                                    [disabled]="isButtonDisabled">
+                                Sign Up
+                            </button>
+                            <button routerLink="/auth" mat-raised-button               
+                                    color="secondary"
+                                    type="button">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+            <footer class="text-center">
+                <div class="links-container">
+                    <span class="fa-size pr-25">
+                        <a href="https://www.facebook.com/filip.kuca91">
+                            <fa name="facebook"></fa> <!-- animation="spin" -->
+                        </a>
+                    </span>
+                    <span class="fa-size">
+                        <a href="https://pl.linkedin.com/in/filip-kuca-951aa395">
+                            <fa name="linkedin"></fa>
+                        </a>
+                    </span>
+                </div>
+                <div class="copyright-container">
+                    &copy;Copyright 2019. All rights reserved. Powered by Filip Kuca
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>

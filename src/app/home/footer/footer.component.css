@@ -1,0 +1,43 @@
+footer {
+    background: #9c27b0;
+    /* margin-top: 40px; dać do stron */
+    padding: 12px;
+    color: white;
+    font-size: 12px;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+}
+
+.footer-logo {
+    flex: 1;
+}
+
+.footer-logo img {
+    height: 50px;
+    filter: invert(100%);
+}
+
+.footer-logo a {
+    color: white;
+    font-size: 16px;
+}
+
+.footer-logo span {
+    display: inline-block;
+    margin: 0 10px;
+    line-height: 50px;
+    vertical-align: bottom;
+}
+
+.footer-version {
+    flex: 1;
+}
+
+.footer-copyright {
+    flex: 1;
+}

@@ -122,38 +122,14 @@ export class DashboardChartsComponent implements OnInit, OnChanges {
                         norm++;
                     }
                 });
+                this.tmpData.datasets[0].data = [tmpBelow, tmpAbove, tmpPermissible];
+                this.humData.datasets[0].data = [humBelow, humAbove, humPermissible];
+                this.warnData.datasets[0].data = [warn, norm];
+                this.tmpChart.update();
+                this.humChart.update();
+                this.warnChart.update();
             }
-            // this.newAbbreviation.forEach(element => {
-            //     // Temperature
-            //     if(parseFloat(element.temperature) >= this.newPreferences.maximumTemperature) {
-            //         tmpAbove++;
-            //         warn++;
-            //     } else if(parseFloat(element.temperature) <= this.newPreferences.minimumTemperature) {
-            //         tmpBelow++;
-            //         warn++;
-            //     } else {
-            //         tmpPermissible++;
-            //         norm++;
-            //     }
-            //     // Humidity
-            //     if(parseFloat(element.humidity) >= this.newPreferences.maximumHumidity) {
-            //         humAbove++;
-            //         warn++;
-            //     } else if(parseFloat(element.humidity) <= this.newPreferences.minimumHumidity) {
-            //         humBelow++;
-            //         warn++;
-            //     } else {
-            //         humPermissible++;
-            //         norm++;
-            //     }
-            // });
         }
-        this.tmpData.datasets[0].data = [tmpBelow, tmpAbove, tmpPermissible];
-        this.humData.datasets[0].data = [humBelow, humAbove, humPermissible];
-        this.warnData.datasets[0].data = [warn, norm];
-        this.tmpChart.update();
-        this.humChart.update();
-        this.warnChart.update();
     }
 }
 // #1fc8f8 first color

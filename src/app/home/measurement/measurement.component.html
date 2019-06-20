@@ -1,3 +1,125 @@
 <div class="page-container">
+    <div class="loading-mask text-center" *ngIf="isLoading">
+        <div class="spinner-container">
+            <mat-spinner></mat-spinner>
+        </div>
+    </div>
     <app-page-header name="Measurement"></app-page-header>
+    <div class="page-content-container">
+        <div class="content">
+            <section>
+                <div class="section-header">
+                    <h3>Measurement analysis managment</h3>
+                </div>
+                <div class="section-content">
+                    <div class="row">
+                        <div class="col-6 mb-10">
+                            <mat-card>
+                                <form (submit)="onMeasurementAnalysis(measurementForm)" #measurementForm="ngForm">
+                                    <mat-card-header>
+                                        <mat-card-title>Measurement</mat-card-title>
+                                        <mat-card-subtitle>Fill out the measurement form</mat-card-subtitle>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <mat-form-field>
+                                            <mat-label>Server room</mat-label>
+                                            <mat-select name="serverRoomName" ngModel #serverRoomName="ngModel"
+                                                        (ngModelChange)="isFormValid(measurementForm)"
+                                                        [disabled]="serverRooms === undefined" required>
+                                                <mat-option *ngFor="let serverRoom of serverRooms"
+                                                            [value]="serverRoom.name || serverRoom.serverRoomName">
+                                                    {{ serverRoom.name || serverRoom.serverRoomName }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <br>
+                                        <mat-form-field class="mr-10">
+                                            <mat-label>From</mat-label>
+                                            <input name="fromDate" 
+                                                   matInput [matDatepicker]="fromDate" 
+                                                   placeholder="Choose a date"
+                                                   ngModel #fromDate="ngModel"
+                                                   (ngModelChange)="isFormValid(measurementForm)" required>
+                                            <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #fromDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <mat-form-field>
+                                            <mat-label>To</mat-label>
+                                            <input name="toDate" 
+                                                   matInput [matDatepicker]="toDate" 
+                                                   placeholder="Choose a date"
+                                                   ngModel #toDate="ngModel"
+                                                   (ngModelChange)="isFormValid(measurementForm)">
+                                            <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #toDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <br>
+                                        <label>Environmental factor type</label>
+                                        <br>
+                                        <mat-radio-group name="factorType" ngModel required #factorType="ngModel"
+                                                         (ngModelChange)="isFormValid(measurementForm)">
+                                            <mat-radio-button value="1" color="primary" class="person-radio-button">
+                                                Temperature
+                                            </mat-radio-button>  
+                                            <mat-radio-button value="2" color="primary" class="person-radio-button">
+                                                Humidity
+                                            </mat-radio-button>    
+                                        </mat-radio-group>
+                                    </mat-card-content>
+                                    <mat-card-actions>
+                                        <button mat-raised-button color="primary"
+                                                type="submit" [disabled]="!isValid">
+                                            Send
+                                        </button>
+                                        <button mat-button color="warn"
+                                                (click)="onCancel()">
+                                            Cancel
+                                        </button>
+                                    </mat-card-actions>
+                                </form>
+                            </mat-card>
+                        </div>
+                        <div class="col-6 mb-10">
+                            <div class="sensor-image-container">
+                                <img alt="DS18B20" *ngIf="visibleImageNumber == 'DS18B20'"
+                                     src="../../../assets/ds18b20.jpg">
+                                <img alt="DHT11" *ngIf="visibleImageNumber == 'DHT11'"
+                                     src="../../../assets/dht11.jpg">
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="analysisResultVisible">
+                            <div class="section-header">
+                                <h3>Analysis result</h3>
+                            </div>
+                            <p>
+                                <b>Description:</b> The analysis was performed on {{ today }}. It describes changes in the server room {{ descriptionServerRoomName }} from day {{ descriptionDateFrom }} to day {{ descriptionDateTo }}. 
+                                <span *ngIf="measurementsResult.length == 0">No measurements were made during this period.</span>
+                                <span *ngIf="measurementsResult.length != 0">Out of {{ measurementsResult.length }} measurements, {{ warnings }} deviations from the permissible standard were found.
+                                    <span *ngIf="sensorType == 1">
+                                        The average temperature is {{ avgTemperature }}, the minimum {{ minTemperature }} and the maximum {{ maxTemperature }}.
+                                    </span>
+                                    <span *ngIf="sensorType == 2">
+                                        The average humidity is {{ avgHumidity }}, the minimum {{ minHumidity}} and the maximum {{ maxHumidity }}.
+                                    </span>
+                                    
+                                    <span class="ok-status"*ngIf="percentage == 0">
+                                        <b>Measurements do not indicate that anything was wrong.</b>
+                                    </span>
+                                    <span class="admissible-status" *ngIf="percentage > 0 && percentage < 25">
+                                        <b>Measurements indicate that measures should be taken to improve the status of the server room.</b>
+                                    </span>
+                                    <span class="not-allowed-status" *ngIf="percentage > 25">
+                                        <b>Take steps immediately! The server room operates in conditions unacceptable for devices located in it!</b>
+                                    </span>
+                                </span>
+                            </p>
+                            <div class="chart-container">
+                                <app-analysis-chart [chartData]="createdChartData"></app-analysis-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
 </div>

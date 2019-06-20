@@ -12,6 +12,7 @@ import { UserComponent } from './user/user.component';
 import { AngularMaterialModule } from '../angular-material.module';
 import { HomeRoutingModule } from './home-routing.module';
 import { PageHeaderComponent } from '../components/page-header/page-header.component';
+import { AnalysisChartComponent } from '../components/analysis-chart/analysis-charts.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PageHeaderComponent } from '../components/page-header/page-header.compo
     DashboardChartsComponent,
     AdministrationComponent,
     MeasurementComponent,
+    AnalysisChartComponent,
     ReportComponent,
     UserComponent,
     PageHeaderComponent

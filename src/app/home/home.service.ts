@@ -29,6 +29,9 @@ export class HomeService {
     private measurementsAbbreviation: any;
     private measurementsAbbreviationList = new Subject<{measurements: any}>();
 
+    private measurementsData: any;
+    private measurementsDataList = new Subject<{measurements: any}>();
+
     constructor(private http: HttpClient) {}
 
     getNotActiveAccountsList() {
@@ -321,5 +324,24 @@ export class HomeService {
 
     getAbbreviationListener() {
         return this.measurementsAbbreviationList.asObservable();
+    }
+
+    getMeasurementData(name: string, dateFrom: Date, dateTo: Date, focusedFactorType: string) {
+        dateFrom.setHours(0,0,0,0);
+        if(!dateTo) {
+            dateTo = new Date(dateFrom.getTime());
+            dateTo.setHours(23,59,0,0);
+        } else {
+            dateTo.setHours(23,59,0,0);
+        }
+        this.http.get<{message: string, measurements: any}>(url + "measurements/analysis/" + name + "/" + dateFrom + "/" + dateTo)
+        .subscribe(result => {
+            this.measurementsData = result.measurements;
+            this.measurementsDataList.next(this.measurementsData);
+        })
+    }
+
+    getMeasurementDataListener() {
+        return this.measurementsDataList.asObservable();
     }
 }

@@ -10,13 +10,27 @@ const Measurement = require("../models/measurement");
 
 //-- Methods --//
 //-- Measurement --//
+exports.getMeasurementData = (request, response, next) => {
+  Measurement.find({ serverRoom: request.params.name, realDate: {"$gte": request.params.dateFrom, "$lt": request.params.dateTo}})
+  .then(measurements => {
+    response.status(200).json({
+      message: "Measurements collected correctly",
+      measurements: measurements
+    });
+  })
+  .catch(error => {
+    response.status(500).json({
+      message: "Collecting measurements failed"
+    })
+  })
+}
+
+//-- Dashboard --//
 exports.getMeasurementAbbreviation = (request, response, next) => {
   let today = new Date();
   today.setHours(0,0,0,0);
   let almostTomorrow = new Date();
   almostTomorrow.setHours(23,59,0,0);
-  // console.log(today)
-  // console.log(almostTomorrow);
   Measurement.find({ serverRoom: request.params.name, 
                      realDate: {"$gte": today, "$lt": almostTomorrow}})
   .then(measurements => {
